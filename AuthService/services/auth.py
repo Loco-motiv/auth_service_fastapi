@@ -8,8 +8,19 @@ from models.user import User, YandexUserInfo
 from exceptions import InvalidCredentialsException
 from settings import JWT_CONFIG
 from services.jwt import create_token
+from confluent_kafka import Producer
+
 
 cookie_scheme = APIKeyCookie(name="users_access_token")
+
+def publish_to_kafka(user_info):
+    conf = {'bootstrap.servers': 'kafka:9092'}
+    producer = Producer(conf)
+    producer.produce('user-registered', json.dumps({
+        'id': user_info.id,
+        'username': user_info.display_name
+    }))
+    producer.flush()
 
 async def get_current_user(token: str = Depends(cookie_scheme)) -> User:
     user_id = verify_token(token)

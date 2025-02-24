@@ -19,6 +19,8 @@ async def get_user_by_id(user_id: int):
     
     try:
         row = await conn.fetchrow(query, int(user_id))
+        if not row:
+            return None
         return dict(row)
     finally:
         await conn.close()

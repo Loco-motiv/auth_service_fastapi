@@ -4,3 +4,5 @@ asyncpg
 httpx
 python-dotenv
 python-jose[cryptography]
+confluent-kafka
+python-telegram-bot
